@@ -24,11 +24,11 @@ def four_point_transform(image, pts):
     # 변환될 이미지의 너비와 높이 계산
     widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
     widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
-    maxWidth = max(int(widthA), int(widthB))
+    maxWidth = 300
 
     heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
     heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
-    maxHeight = max(int(heightA), int(heightB))
+    maxHeight = 300
 
     # 변환 후 4점의 좌표
     dst = np.array([
@@ -54,7 +54,7 @@ gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 ret, thr = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY)
 cv2.imshow('thr',thr)
 edged = cv2.Canny(gray, 50, 150)
-
+cv2.imshow('ed',edged)
 # 윤곽선 찾기
 contours, _ = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
