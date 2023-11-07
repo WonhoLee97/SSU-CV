@@ -28,7 +28,7 @@ def on_mouse(event, x, y, flags, param):
             pers_mat=cv2.getPerspectiveTransform(src_pts,dst_pts)
             dst=cv2.warpPerspective(src, pers_mat, (w,h))
             cv2.imshow('dst',dst)
-            cv2.imwrite('board4.jpg',dst)
+        cv2.imwrite('board6.jpg',dst)
 
 cnt=0
 src_pts=np.zeros([4,2],dtype=np.float32)

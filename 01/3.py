@@ -10,7 +10,7 @@ def find_corners_of_largest_polygon(img):
     return corners
 
 # 이미지 로드
-image = cv2.imread('board2.jpg')
+image = cv2.imread('board5.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # Canny 엣지 검출기로 엣지 찾기
