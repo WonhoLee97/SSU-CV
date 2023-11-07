@@ -56,15 +56,15 @@ cv2.imshow('thr',thr)
 edged = cv2.Canny(gray, 50, 150)
 cv2.imshow('ed',edged)
 # 윤곽선 찾기
-contours, _ = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+contours, _ = cv2.findContours(edged.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
 contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
-
+print(contours)
 # 윤곽선을 순회하며 체스보드 윤곽 찾기
 for c in contours:
     # 윤곽선의 근사화
     peri = cv2.arcLength(c, True)
     approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-
+    screenCnt=approx
     # 근사화된 윤곽선이 4개의 점을 가지고 있으면 (즉, 직사각형이면) 체스보드로 간주
     if len(approx) == 4:
         screenCnt = approx
