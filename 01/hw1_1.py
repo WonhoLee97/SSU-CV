@@ -44,7 +44,7 @@ for pt in pts:
     col_vals = crop[:, col]
     rows.append(np.sum(row_vals < np.max(row_vals) / 2))
     cols.append(np.sum(col_vals < np.max(col_vals) / 2))
-    
+    print(pt)
     # 각 행과 열에서 평균 교차점 수를 구합니다
 avg_rows = np.mean(rows)
 avg_cols = np.mean(cols)
