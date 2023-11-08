@@ -14,7 +14,7 @@ def order_points(pts):
 
     return src_pts
 
-def four_point_transform(src, pts):
+def get_pers_mat(src, pts):
     src_pts=order_points(pts)
     (tl,tr,br,bl)=src_pts
     w=640
@@ -37,7 +37,7 @@ def automatic_perspective(src):
         if len(approx)==4:
             tmp=approx
             break
-    pers_mat=four_point_transform(src,tmp.reshape(4,2))
+    pers_mat=get_pers_mat(src,tmp.reshape(4,2))
     dst=cv2.warpPerspective(src,pers_mat,(640,640))
     return dst
 
@@ -49,6 +49,6 @@ if __name__=='__main__':
     src=cv2.imread(filename)
     dst=automatic_perspective(src)
 
-    cv2.imshow("Warped", dst)
+    cv2.imshow("dst", dst)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

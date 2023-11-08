@@ -2,58 +2,72 @@ import sys
 import cv2
 import numpy as np
 import hw1_3 as AP
+import math
 
 if len(sys.argv)>1:
     filename=sys.argv[1]
 else:
-    filename='board2.jpg'
+    filename='board1.jpg'
 src=cv2.imread(filename)
 
-crop=AP.automatic_perspective(src.copy())
-# crop=src.copy()
-dst=crop.copy()
+crop=AP.automatic_perspective(src.copy()) #color
+mid=cv2.cvtColor(crop,cv2.COLOR_BGR2GRAY)
+edges=cv2.Canny(mid, 50,150)
+lines = cv2.HoughLines(edges, 1, np.pi / 180, 230)
 
-crop=cv2.cvtColor(crop,cv2.COLOR_BGR2GRAY)
+if lines is not None:
+    cord_x=[]
+    cord_y=[]
+    for i in range(lines.shape[0]):
+        rho=lines[i][0][0]
+        theta=lines[i][0][1]
+        cos_t=math.cos(theta)
+        sin_t=math.sin(theta)
+        x0, y0 = rho*cos_t, rho*sin_t
+        alpha=1000
+        pt1=(int(x0-alpha*sin_t),int(y0+alpha*cos_t))
+        pt2=(int(x0+alpha*sin_t),int(y0-alpha*cos_t))
+        cord_x.append(pt1[0])
+        cord_x.append(pt2[0])
+        cord_y.append(pt1[1])
+        cord_y.append(pt2[1])
+        cv2.line(crop, pt1,pt2, (0, 0, 255), 2,cv2.LINE_AA)
 
-_,thr=cv2.threshold(crop,100,255,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
-cv2.imshow('thr',thr)
-# 엣지 검출
-edged = cv2.Canny(crop, 50, 150)
-cv2.imshow('edg',edged)
-# 윤곽선 검출
-contours, _ = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+for i in range(len(cord_x)):
+    if cord_x[i]>640:
+        cord_x[i]=640
+    elif cord_x[i]<0:
+        cord_x[i]=0
+for i in range(len(cord_y)):
+    if cord_y[i]>640:
+        cord_y[i]=640
+    elif cord_y[i]<0:
+        cord_y[i]=0
 
-# 가장 큰 윤곽선 찾기
-largest_contour = max(contours, key=cv2.contourArea)
-epsilon = 0.1 * cv2.arcLength(largest_contour, True)
-approx = cv2.approxPolyDP(largest_contour, epsilon, True)
-cv2.imshow('crop',crop)
+top=0
+left=0
+right=0
+bottom=0
 
-cv2.drawContours(dst, [approx], -1, (0, 255, 0), 3)
-cv2.imshow('Checkerboard', dst)
-cv2.waitKey(0)
-    
-    # 모서리 포인트 추출
-pts = approx.reshape(4, 2)
-rows, cols = [], []
+for i in range(len(cord_x)): #전체좌표
+    if cord_y[i]<5: #상단
+        top+=1
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,0,0),5)
+    if cord_y[i]>635: #하단
+        bottom+=1
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,0,0),5)
+    if cord_x[i]<5: #좌단
+        left+=1
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(0,255,255),5)
+    if cord_x[i]>635: #우단
+        right+=1
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(0,255,0),5) 
+result=max(top,left,right,bottom)
 
-    # 각 모서리에서 그레이스케일 이미지의 행과 열을 따라 값의 변화를 검사하여 교차점을 찾습니다
-for pt in pts:
-    row, col = pt
-    row_vals = crop[row, :]
-    col_vals = crop[:, col]
-    rows.append(np.sum(row_vals < np.max(row_vals) / 2))
-    cols.append(np.sum(col_vals < np.max(col_vals) / 2))
-    print(pt)
-    # 각 행과 열에서 평균 교차점 수를 구합니다
-avg_rows = np.mean(rows)
-avg_cols = np.mean(cols)
-print(rows,cols)
-print(avg_rows,avg_cols)
-    # 교차점 수에 따라 체커보드의 규격을 판별합니다
-if avg_rows > 9 and avg_cols > 9:
-    print("국제 룰 체커보드 (10x10)")
-elif avg_rows > 7 and avg_cols > 7:
-    print("영/미식 룰 체커보드 (8x8)")
+if result>15: #오차를 감안한 Threshold
+    print('10x10')
 else:
-    print('no')
+    print('8x8')
+
+cv2.waitKey()
+cv2.destroyAllWindows

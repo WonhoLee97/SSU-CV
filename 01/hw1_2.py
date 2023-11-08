@@ -6,7 +6,7 @@ import numpy as np
 if len(sys.argv)>1:
     filename=sys.argv[1]
 else:
-    filename='board2.jpg'
+    filename='board1.jpg'
     
 def on_mouse(event, x, y, flags, param):
     global cnt, src_pts
@@ -15,7 +15,6 @@ def on_mouse(event, x, y, flags, param):
             src_pts[cnt,:]=np.array([x,y]).astype(np.float32)
             cnt+=1
             
-            #cv2.circle(src,(x,y),5,(0,0,255),-1)
             cv2.imshow('src',src)
         if cnt==4:
             w=300

@@ -6,13 +6,13 @@ import hw1_3 as AP
 if len(sys.argv)>1:
     filename=sys.argv[1]
 else:
-    filename='board2.jpg'
+    filename='board1.jpg'
 src=cv2.imread(filename)
 
 crop=AP.automatic_perspective(src.copy())
 crop=cv2.cvtColor(crop,cv2.COLOR_BGR2GRAY)
 
-_,thr=cv2.threshold(crop,100,255,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
+_,thr=cv2.threshold(crop,100,255,cv2.THRESH_BINARY|cv2.THRESH_OTSU)
 
 
 alpha=0.1
@@ -37,8 +37,7 @@ for i in center:
         black+=1
 print('w:{white}, b:{black}'.format(white=white, black=black))
 
-cv2.imshow('src',src)
-cv2.imshow('thr',thr)
 cv2.imshow('dst',dst)
+cv2.imshow('thr',thr)
 cv2.waitKey()
 cv2.destroyAllWindows()
