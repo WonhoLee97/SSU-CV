@@ -38,6 +38,5 @@ for i in center:
 print('w:{white}, b:{black}'.format(white=white, black=black))
 
 cv2.imshow('dst',dst)
-cv2.imshow('thr',thr)
 cv2.waitKey()
 cv2.destroyAllWindows()
