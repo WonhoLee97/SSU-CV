@@ -52,22 +52,22 @@ bottom=0
 for i in range(len(cord_x)): #전체좌표
     if cord_y[i]<5: #상단
         top+=1
-        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,0,0),5)
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,0,255),5)
     if cord_y[i]>635: #하단
         bottom+=1
-        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,0,0),5)
-    if cord_x[i]<5: #좌단
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,255,255),5)
+    if cord_x[i]<5: #좌측
         left+=1
         cv2.circle(crop,(cord_x[i],cord_y[i]),3,(0,255,255),5)
-    if cord_x[i]>635: #우단
+    if cord_x[i]>635: #우측
         right+=1
-        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(0,255,0),5) 
-result=max(top,left,right,bottom)
-
+        cv2.circle(crop,(cord_x[i],cord_y[i]),3,(255,255,0),5) 
+value=[top,left,right,bottom]
+result=sum(value)/4
 if result>15: #오차를 감안한 Threshold
     print('10x10')
 else:
     print('8x8')
-
+cv2.imshow('src',src)
 cv2.waitKey()
 cv2.destroyAllWindows
