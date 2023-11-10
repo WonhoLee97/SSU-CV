@@ -1,7 +1,7 @@
 import sys
 import cv2
 import numpy as np
-import hw1_3 as AP
+import hw1_3 as APT
 
 if len(sys.argv)>1:
     filename=sys.argv[1]
@@ -9,7 +9,7 @@ else:
     filename='board1.jpg'
 src=cv2.imread(filename)
 
-crop=AP.automatic_perspective(src.copy())
+crop=APT.automatic_perspective(src.copy())
 crop=cv2.cvtColor(crop,cv2.COLOR_BGR2GRAY)
 
 _,thr=cv2.threshold(crop,100,255,cv2.THRESH_BINARY|cv2.THRESH_OTSU)

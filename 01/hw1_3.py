@@ -30,11 +30,11 @@ def automatic_perspective(src):
     gray=cv2.cvtColor(src,cv2.COLOR_BGR2GRAY)
     edge=cv2.Canny(gray,50,150)
     contours,_=cv2.findContours(edge.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-    contours=sorted(contours,key=cv2.contourArea,reverse=True)[:5]
+    contours=sorted(contours,key=cv2.contourArea,reverse=True)[:5] #크기가 큰 순서대로 정렬
     for pts in contours:
         approx=cv2.approxPolyDP(pts,cv2.arcLength(pts,True)*0.02,True)
         tmp=approx
-        if len(approx)==4:
+        if len(approx)==4: #가장 큰 사각형을 보드라고 가정
             tmp=approx
             break
     pers_mat=get_pers_mat(src,tmp.reshape(4,2))
